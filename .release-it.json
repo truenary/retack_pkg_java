@@ -1,0 +1,36 @@
+{
+  "$schema": "https://unpkg.com/release-it/schema/release-it.json",
+  "github": {
+    "release": true,
+    "releaseName": "Release ${version}",
+    "preRelease": false,
+    "autoGenerate": true,
+    "tokenRef": "TOKEN_GITHUB",
+    "contributors": true
+  },
+  "hooks": {
+    "after:bump": [
+      "chmod +x ./script/update_version.sh",
+      "./script/update_version.sh pom.xml ${version}"
+    ],
+    "after:release": [
+      "mvn clean install",
+      "mvn deploy"
+    ]
+  },
+  "git": {
+    "commitMessage": "chore(release): ${version}",
+    "tagName": "V${version}",
+    "requireCleanWorkingDir": true,
+    "push": true
+  },
+  "npm": {
+    "publish": false
+  },
+  "plugins": {
+    "@release-it/conventional-changelog": {
+      "preset": "angular",
+      "infile": "CHANGELOG.md"
+    }
+  }
+}
